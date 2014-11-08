@@ -4,13 +4,15 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Moq;
 
+using Ploeh.AutoFixture;
+
 namespace RetrievePassword.Tests
 {
     [TestClass]
     public class RetrieverTests
     {
-        public const string EMAIL = "test@gmail.com";
-        private const string PASSWORD = "abc";
+        public static string Email ;
+        private static string password;
         public string Result;
         public double Seconds;
         private Mock<Retriever> _retriever;
@@ -18,29 +20,32 @@ namespace RetrievePassword.Tests
         [TestInitialize]
         public void Init()
         {
+            var fixture = new Fixture();
+            Email = fixture.Create<string>();
+            password = fixture.Create<string>();
             _retriever = new Mock<Retriever>();
-            Result = _retriever.Object.Generate(PASSWORD, out Seconds);
+            Result = _retriever.Object.Generate(password, out Seconds);
         }
 
         [TestMethod]
         public void RightUser_RightTime()
         {
             _retriever.Setup(r => r.Date.Now).Returns(DateTime.Now.AddMinutes(5));
-            Assert.IsTrue(_retriever.Object.IsValid(PASSWORD, Seconds, Result, new TimeSpan(0, 10, 0)));
+            Assert.IsTrue(_retriever.Object.IsValid(password, Seconds, Result, new TimeSpan(0, 10, 0)));
         }
 
         [TestMethod]
         public void RightUser_TooEarly()
         {
             _retriever.Setup(r => r.Date.Now).Returns(DateTime.Now.AddMinutes(-5));
-            Assert.IsFalse(_retriever.Object.IsValid(PASSWORD, Seconds, Result, new TimeSpan(0, 10, 0)));
+            Assert.IsFalse(_retriever.Object.IsValid(password, Seconds, Result, new TimeSpan(0, 10, 0)));
         }
 
         [TestMethod]
         public void RightUser_TooLate()
         {
             _retriever.Setup(r => r.Date.Now).Returns(DateTime.Now.AddMinutes(15));
-            Assert.IsFalse(_retriever.Object.IsValid(PASSWORD, Seconds, Result, new TimeSpan(0, 10, 0)));
+            Assert.IsFalse(_retriever.Object.IsValid(password, Seconds, Result, new TimeSpan(0, 10, 0)));
         }
 
         [TestMethod]
