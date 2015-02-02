@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Security.Cryptography;
-using System.Security.Policy;
 using System.Text;
 
 namespace RetrievePassword
@@ -20,9 +19,10 @@ namespace RetrievePassword
             }
         }
 
-        public string Generate(string password, out double seconds, string strategy = null)
+        public string Generate(string password, out string seconds, string strategy = null)
         {
-            seconds = (DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;
+            var s = (ulong)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;
+            seconds = s.ToString("X");
             if (strategy == null)
             {
                 return Md5(password + seconds);
@@ -30,9 +30,10 @@ namespace RetrievePassword
             return Md5(password + seconds + strategy);
         }
 
-        public bool IsValid(string password, double seconds, string result, TimeSpan timeSpan, string strategy = null)
+        public bool IsValid(string password, string seconds, string result, TimeSpan timeSpan, string strategy = null)
         {
-            var time = new DateTime(1970, 1, 1).AddSeconds(seconds);
+            var s = Convert.ToUInt64(seconds, 16);
+            var time = new DateTime(1970, 1, 1).AddSeconds(s);
             if (Date.Now < time
                 || Date.Now > time + timeSpan)
             {

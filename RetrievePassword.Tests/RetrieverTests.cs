@@ -14,7 +14,7 @@ namespace RetrievePassword.Tests
         public static string Email ;
         private static string password;
         public string Result;
-        public double Seconds;
+        public string Seconds;
         private Mock<Retriever> _retriever;
 
         [TestInitialize]
