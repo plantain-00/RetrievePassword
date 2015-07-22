@@ -15,7 +15,7 @@ namespace RetrievePassword.QuickStarted
             string t;
             var s = retriever.Generate(p, out t);
 
-            var url = string.Format("http://localhost?s={0}&t={1}&e={2}", s, t, HttpUtility.UrlEncode(e));
+            var url = $"http://localhost?s={s}&t={t}&e={HttpUtility.UrlEncode(e)}";
             Console.WriteLine(url);
 
             Console.WriteLine(retriever.IsValid(p, t, s, new TimeSpan(0, 0, 10)));
@@ -27,7 +27,7 @@ namespace RetrievePassword.QuickStarted
             var strategy = Strategy.In10Seconds.ToString();
             var s = retriever.Generate(p, out t, strategy);
 
-            var url = string.Format("http://localhost?s={0}&t={1}&e={2}&g={3}", s, t, HttpUtility.UrlEncode(e), HttpUtility.UrlEncode(strategy));
+            var url = $"http://localhost?s={s}&t={t}&e={HttpUtility.UrlEncode(e)}&g={HttpUtility.UrlEncode(strategy)}";
             Console.WriteLine(url);
 
             Console.WriteLine(retriever.IsValid(p, t, s, new TimeSpan(0, 0, 10), strategy));
